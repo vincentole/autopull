@@ -27,8 +27,21 @@ fn main() -> Result<()> {
 
     let dir = fs::read_dir(&path)
         .with_context(|| format!(" ! [error] Failed to read path: {:?}", &path))?;
+    let dir: Vec<_> = dir.collect();
 
-    for entry in dir {
+    let mut count = 0;
+
+    for entry in dir.iter() {
+        let entry = entry.as_ref().unwrap();
+
+        let metadata = entry.metadata()?;
+
+        if metadata.is_dir() {
+            count += 1;
+        }
+    }
+
+    for (i, entry) in dir.into_iter().enumerate() {
         let entry = entry?;
         let metadata = entry.metadata()?;
 
@@ -36,6 +49,7 @@ fn main() -> Result<()> {
             let path = entry.path();
 
             println!("\n");
+            println!("[{} / {}]         Continuing with next repo:", i + 1, count);
             let branch_exists = git_branch_exists(&path, &branch)?;
             if branch_exists {
                 let output = git_checkout(&path, &branch)?;
