@@ -46,15 +46,17 @@ fn main() -> Result<()> {
         }
     }
 
-    for (i, entry) in dir.into_iter().enumerate() {
+    let mut index = 0;
+    for entry in dir.into_iter() {
         let entry = entry?;
         let metadata = entry.metadata()?;
 
         if metadata.is_dir() {
+            index += 1;
             let path = entry.path();
 
             println!("\n");
-            println!("[{} / {}]         Continuing with next repo:", i + 1, count);
+            println!("[{} / {}]         Continuing with next repo:", index, count);
             let branch_exists = git_branch_exists(&path, &branch)?;
             if branch_exists {
                 let output = git_checkout(&path, &branch)?;
