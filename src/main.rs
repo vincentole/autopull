@@ -36,7 +36,9 @@ fn main() -> Result<()> {
 
         let metadata = entry.metadata()?;
 
+        println!("[counting] {:?}", entry.path());
         if metadata.is_dir() {
+            println!("[counting] added");
             count += 1;
         }
     }
