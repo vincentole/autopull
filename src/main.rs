@@ -14,6 +14,8 @@ struct Cli {
     branch_name: String,
 }
 
+const SPACER: &str = "               ";
+const COUNTING: &str = "[counting]     ";
 const CHECK_BRANCH: &str = "[git branch]   ";
 const ERROR: &str = " ! [error]     ";
 const GIT_CHECKOUT: &str = "[git checkout] ";
@@ -31,15 +33,16 @@ fn main() -> Result<()> {
 
     let mut count = 0;
 
+    println!("{} Counting paths", COUNTING);
     for entry in dir.iter() {
         let entry = entry.as_ref().unwrap();
 
         let metadata = entry.metadata()?;
 
-        println!("[counting] {:?}", entry.path());
+        println!("{}  |  Detected path: {:?}", SPACER, entry.path());
         if metadata.is_dir() {
-            println!("[counting] added");
             count += 1;
+            println!("{}  |  Added - current count: {}", SPACER, count);
         }
     }
 
